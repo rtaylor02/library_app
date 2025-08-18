@@ -59,13 +59,29 @@ jobs:
           EB_APP="JavaRchitect-library-app"
           EB_ENV="JavaRchitect-library-app-env"
 
+          # Create new app version
           aws elasticbeanstalk create-application-version \
             --application-name $EB_APP \
             --version-label $GITHUB_SHA \
             --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="deploy-${GITHUB_SHA}.zip"
 
-          aws elasticbeanstalk update-environment \
-            --application-name $EB_APP \
-            --environment-name $EB_ENV \
-            --version-label $GITHUB_SHA
+          # Update or create environment
+          if aws elasticbeanstalk describe-environments --application-name $EB_APP --environment-names $EB_ENV | grep -q '"Status":'; then
+            echo "Updating existing environment..."
+            aws elasticbeanstalk update-environment \
+              --application-name $EB_APP \
+              --environment-name $EB_ENV \
+              --version-label $GITHUB_SHA
+          else
+            echo "Creating new environment..."
+            aws elasticbeanstalk create-environment \
+              --application-name $EB_APP \
+              --environment-name $EB_ENV \
+              --solution-stack-name "64bit Amazon Linux 2023 v4.6.3 running Docker" \
+              --option-settings \
+                  Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
+                  Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=aws-elasticbeanstalk-ec2-role \
+              --service-role aws-elasticbeanstalk-service-role \
+              --version-label $GITHUB_SHA
+          fi
 
