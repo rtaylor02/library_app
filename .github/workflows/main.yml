@@ -57,7 +57,7 @@ jobs:
       - name: Deploy to Elastic Beanstalk
         run: |
           EB_APP="JavaRchitect-library-app"
-          EB_ENV="JavaRchitect-library-app-env"
+          EB_ENV="JavaRchitect-library-env"
 
           # Create new app version
           aws elasticbeanstalk create-application-version \
