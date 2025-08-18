@@ -1,0 +1,64 @@
+name: CI/CD to AWS Elastic Beanstalk
+
+on: workflow_dispatch
+  #push:
+    #branches:
+      #- main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} \
+            | docker login --username AWS \
+              --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+
+      - name: Build and tag Docker images
+        run: |
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-backend:${GITHUB_SHA} ./02-backend/libraryapp
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-frontend:${GITHUB_SHA} ./03-frontend/follow_along/react-library-app
+          
+      - name: Push Docker images
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-backend:${GITHUB_SHA}
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-frontend:${GITHUB_SHA}
+
+      - name: Update docker-compose.yml with new image tags
+        run: |
+          sed -i "s|javarchitect-library-app-backend:.*|javarchitect-library-app-backend:${GITHUB_SHA}|g" docker-compose.yml
+          sed -i "s|javarchitect-library-app-frontend:.*|javarchitect-library-app-frontend:${GITHUB_SHA}|g" docker-compose.yml
+
+      - name: Package Dockerrun for EB
+        run: |
+          mkdir -p deploy
+          cp docker-compose.yml deploy/
+          cd deploy
+          zip -r ../deploy.zip .
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          EB_APP="javarchitect-library-app"
+          EB_ENV="javarchitect-library-env"
+
+          aws elasticbeanstalk create-application-version \
+            --application-name $EB_APP \
+            --version-label $GITHUB_SHA \
+            --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_ACCOUNT_ID }}-${{ secrets.AWS_REGION }}",S3Key="deploy-${GITHUB_SHA}.zip"
+
+          aws elasticbeanstalk update-environment \
+            --application-name $EB_APP \
+            --environment-name $EB_ENV \
+            --version-label $GITHUB_SHA
