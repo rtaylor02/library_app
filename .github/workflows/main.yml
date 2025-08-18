@@ -28,8 +28,8 @@ jobs:
 
       - name: Build and tag Docker images
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-backend:${GITHUB_SHA} ./02-backend/libraryapp
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-frontend:${GITHUB_SHA} ./03-frontend/follow_along/react-library-app
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-backend:${GITHUB_SHA} ./backend/libraryapp
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-frontend:${GITHUB_SHA} ./frontend/react-library-app
           
       - name: Push Docker images
         run: |
