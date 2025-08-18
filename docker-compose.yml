@@ -1,0 +1,15 @@
+version: '3'
+services:
+  backend:
+    image: 216207491357.dkr.ecr.eu-west-2.amazonaws.com/javarchitect-library-app-backend:latest
+    container_name: backend
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: 216207491357.dkr.ecr.eu-west-2.amazonaws.com/javarchitect-library-app-frontend:latest
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
