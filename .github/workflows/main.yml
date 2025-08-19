@@ -11,6 +11,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -57,14 +60,22 @@ jobs:
       - name: Deploy to Elastic Beanstalk
         run: |
           EB_APP="JavaRchitect-library-app"
-          EB_ENV="JavaRchitect-library-app-env2"
+          EB_ENV="JavaRchitect-library-env"
 
-          # Create new app version
-          aws elasticbeanstalk create-application-version \
+          # Create completely new app OR create new app version
+          if aws elasticbeanstalk describe-applications --application-names $EB_APP >/dev/null 2>&1; then
+            echo "Application $EB_APP already exists. Creating new version instead..."
+            aws elasticbeanstalk create-application-version \
             --application-name $EB_APP \
             --version-label $GITHUB_SHA \
             --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="deploy-${GITHUB_SHA}.zip"
-
+          else
+            echo "Application $EB_APP does not exist. Creating new application..."
+            aws elasticbeanstalk create-application \
+              --application-name $EB_APP \
+              --description "JavaRchitect Library Application deployed via GitHub Actions"
+          fi         
+          
           # Update or create environment
           if aws elasticbeanstalk describe-environments --application-name $EB_APP --environment-names $EB_ENV | grep -q '"Status":'; then
             echo "Updating existing environment..."
@@ -73,7 +84,7 @@ jobs:
               --environment-name $EB_ENV \
               --version-label $GITHUB_SHA
           else
-            echo "Creating new environment..."
+            echo "Environment $EB_ENV does not exist. Creating new environment..."
             aws elasticbeanstalk create-environment \
               --application-name $EB_APP \
               --environment-name $EB_ENV \
