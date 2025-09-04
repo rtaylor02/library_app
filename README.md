@@ -41,6 +41,18 @@ The system allows users to browse, borrow, and manage books, with secure API int
 
 ---
 
+## 🏗️ Architecture Diagram
+
+![architecture_diagram](./assets/libraryapp_sm.png)
+
+---
+
+## 📸 Screenshots
+
+![home](./assets/libraryapp_home.png)
+
+---
+
 ## 📂 Project Structure
 
 ```plaintext
@@ -110,6 +122,12 @@ fullstack-library/
 * **Backend**: Deployed as a Spring Boot JAR on AWS Elastic Beanstalk
 * **Database**: Hosted on Amazon RDS
 * **Configuration**: Managed with AWS Parameter Store
+
+---
+
+## 🏗️ Architecture Diagram
+
+![architecture_diagram](./assets/employeemgtsystem_sm.png)
 
 ---
 
