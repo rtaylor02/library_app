@@ -85,7 +85,7 @@ jobs:
             echo "Application $EB_APP already exists. Creating new version instead..."
             aws elasticbeanstalk create-application-version \
             --application-name $EB_APP \
-            --version-label $GITHUB_SHA \
+            --version-label ${GITHUB_SHA} \
             --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="deploy-${GITHUB_SHA}.zip"
           else
             echo "Application $EB_APP does not exist. Creating new application..."
@@ -100,7 +100,7 @@ jobs:
             aws elasticbeanstalk update-environment \
               --application-name $EB_APP \
               --environment-name $EB_ENV \
-              --version-label $GITHUB_SHA
+              --version-label ${GITHUB_SHA}
           else
             echo "Environment $EB_ENV does not exist. Creating new environment..."
             aws elasticbeanstalk create-environment \
@@ -111,6 +111,6 @@ jobs:
                   Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
                   Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=aws-elasticbeanstalk-ec2-role \
               --operations-role "arn:aws:iam::216207491357:role/aws-elasticbeanstalk-service-role" \
-              --version-label $GITHUB_SHA
+              --version-label ${GITHUB_SHA}
           fi
   
