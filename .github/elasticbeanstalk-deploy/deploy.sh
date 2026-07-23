@@ -53,10 +53,22 @@ if [ "$ENV_EXISTS" = "$EB_ENV" ]; then
     --region "$REGION"
 else
   echo "Environment $EB_ENV does not exist. Creating new environment..."
+
+  # Dynamically fetch the latest AL2023 Docker solution stack for your region
+  SOLUTION_STACK=$(aws elasticbeanstalk list-available-solution-stacks --region "$REGION" \
+  --query "SolutionStacks[?contains(@, '64bit Amazon Linux 2023') && contains(@, 'running Docker')] | [0]" \
+  --output text)
+
+  if [ -z "$SOLUTION_STACK" ] || [ "$SOLUTION_STACK" = "None" ]; then
+    echo "Error: Could not retrieve a valid Amazon Linux 2023 Docker solution stack in region $REGION."
+    exit 1
+  fi
+  echo "Found solution stack: $SOLUTION_STACK"
+
   aws elasticbeanstalk create-environment \
     --application-name "$EB_APP" \
     --environment-name "$EB_ENV" \
-    --solution-stack-name "64bit Amazon Linux 2023 v4.6.3 running Docker" \
+    --solution-stack-name "$SOLUTION_STACK" \
     --option-settings \
       Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
       Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=aws-elasticbeanstalk-ec2-role \
