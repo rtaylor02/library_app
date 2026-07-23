@@ -1,6 +1,6 @@
 name: CI/CD to AWS Elastic Beanstalk
 
-on: 
+on:
   push:
     branches:
       - main
@@ -20,6 +20,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+          elasticbeanstalk-app-name: ${{ secrets.EB_APP_NAME }}
+          elasticbeanstalk-env-name: ${{ secrets.EB_ENV_NAME }}
 
       - name: Login to Amazon ECR
         run: |
@@ -29,18 +31,27 @@ jobs:
 
       - name: Build and tag Docker images
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app:${GITHUB_SHA} ./backend/libraryapp
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app:${GITHUB_SHA} ./frontend/react-library-app
-          
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.EB_APP_NAME }}-backend:${GITHUB_SHA} ./backend/libraryapp
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.EB_APP_NAME }}-frontend:${GITHUB_SHA} ./frontend/react-library-app
+
       - name: Push Docker images
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app:${GITHUB_SHA}
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app:${GITHUB_SHA}
+          REPO_NAME="${{ secrets.EB_APP_NAME }}-backend"
+          REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+          
+          aws ecr describe-repositories \
+          --repository-names "$REPO_NAME" \
+          --region "${{ secrets.AWS_REGION }}" >/dev/null 2>&1 || \
+          aws ecr create-repository \
+          --repository-name "$REPO_NAME" \
+          --region "${{ secrets.AWS_REGION }}"
+          
+          docker push "$REGISTRY/$REPO_NAME:${GITHUB_SHA}"
 
       - name: Update docker-compose.yml with new image tags
         run: |
-          sed -i "s|javarchitect-library-app-backend:.*|javarchitect-library-app:${GITHUB_SHA}|g" docker-compose.yml
-          sed -i "s|javarchitect-library-app-frontend:.*|javarchitect-library-app:${GITHUB_SHA}|g" docker-compose.yml
+          sed -i "s|${{ secrets.EB_APP_NAME }}-backend:.*|${{ secrets.EB_APP_NAME }}-backend-app:${GITHUB_SHA}|g" docker-compose.yml
+          sed -i "s|${{ secrets.EB_APP_NAME }}-frontend:.*|${{ secrets.EB_APP_NAME }}-frontend-app:${GITHUB_SHA}|g" docker-compose.yml
 
       - name: Package Dockerrun for EB
         run: |
@@ -55,9 +66,9 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk
         run: |
-          EB_APP="JavaRchitect-library-app"
-          EB_ENV="JavaRchitect-library-env"
-
+          EB_APP="${{ secrets.EB_APP_NAME }}"
+          EB_ENV="${{ secrets.EB_ENV_NAME }}"
+          
           # Create completely new app OR create new app version
           if aws elasticbeanstalk describe-applications --application-names $EB_APP >/dev/null 2>&1; then
             echo "Application $EB_APP already exists. Creating new version instead..."
@@ -91,4 +102,4 @@ jobs:
               --operations-role "arn:aws:iam::216207491357:role/aws-elasticbeanstalk-service-role" \
               --version-label $GITHUB_SHA
           fi
-
+  
