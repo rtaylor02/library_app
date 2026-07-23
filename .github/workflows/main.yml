@@ -34,13 +34,13 @@ jobs:
           
       - name: Push Docker images
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-backend:${GITHUB_SHA}
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app-frontend:${GITHUB_SHA}
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app:${GITHUB_SHA}
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/javarchitect-library-app:${GITHUB_SHA}
 
       - name: Update docker-compose.yml with new image tags
         run: |
-          sed -i "s|javarchitect-library-app-backend:.*|javarchitect-library-app-backend:${GITHUB_SHA}|g" docker-compose.yml
-          sed -i "s|javarchitect-library-app-frontend:.*|javarchitect-library-app-frontend:${GITHUB_SHA}|g" docker-compose.yml
+          sed -i "s|javarchitect-library-app-backend:.*|javarchitect-library-app:${GITHUB_SHA}|g" docker-compose.yml
+          sed -i "s|javarchitect-library-app-frontend:.*|javarchitect-library-app:${GITHUB_SHA}|g" docker-compose.yml
 
       - name: Package Dockerrun for EB
         run: |
