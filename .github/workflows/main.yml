@@ -76,41 +76,9 @@ jobs:
           aws s3 cp deploy-${GITHUB_SHA}.zip s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/
 
       - name: Deploy to Elastic Beanstalk
-        run: |
-          EB_APP="${{ secrets.EB_APP_NAME }}"
-          EB_ENV="${{ secrets.EB_ENV_NAME }}"
-          
-          # Create completely new app OR create new app version
-          if aws elasticbeanstalk describe-applications --application-names $EB_APP >/dev/null 2>&1; then
-            echo "Application $EB_APP already exists. Creating new version instead..."
-            aws elasticbeanstalk create-application-version \
-            --application-name $EB_APP \
-            --version-label ${GITHUB_SHA} \
-            --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="deploy-${GITHUB_SHA}.zip"
-          else
-            echo "Application $EB_APP does not exist. Creating new application..."
-            aws elasticbeanstalk create-application \
-              --application-name $EB_APP \
-              --description "JavaRchitect Library Application deployed via GitHub Actions"
-          fi         
-          
-          # Update or create environment
-          if aws elasticbeanstalk describe-environments --application-name $EB_APP --environment-names $EB_ENV | grep -q '"Status":'; then
-            echo "Updating existing environment..."
-            aws elasticbeanstalk update-environment \
-              --application-name $EB_APP \
-              --environment-name $EB_ENV \
-              --version-label ${GITHUB_SHA}
-          else
-            echo "Environment $EB_ENV does not exist. Creating new environment..."
-            aws elasticbeanstalk create-environment \
-              --application-name $EB_APP \
-              --environment-name $EB_ENV \
-              --solution-stack-name "64bit Amazon Linux 2023 v4.6.3 running Docker" \
-              --option-settings \
-                  Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
-                  Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=aws-elasticbeanstalk-ec2-role \
-              --operations-role "arn:aws:iam::216207491357:role/aws-elasticbeanstalk-service-role" \
-              --version-label ${GITHUB_SHA}
-          fi
-  
+        uses: ./.github/actions/elasticbeanstalk-deploy
+        with:
+          eb_app_name: ${{ secrets.EB_APP_NAME }}
+          eb_env_name: ${{ secrets.EB_ENV_NAME }}
+          aws_region: ${{ secrets.AWS_REGION }}
+          aws_account_id: ${{ secrets.AWS_ACCOUNT_ID }}

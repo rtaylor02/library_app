@@ -1,0 +1,23 @@
+name: Elastic Beanstalk Deploy
+description: Create app/version/env if needed and deploy
+inputs:
+  eb_app_name:
+    required: true
+  eb_env_name:
+    required: true
+  aws_region:
+    required: true
+  aws_account_id:
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        chmod +x "${{ github.action_path }}/deploy.sh"
+        "${{ github.action_path }}/deploy.sh"
+      env:
+        EB_APP: ${{ inputs.eb_app_name }}
+        EB_ENV: ${{ inputs.eb_env_name }}
+        AWS_REGION: ${{ inputs.aws_region }}
+        AWS_ACCOUNT_ID: ${{ inputs.aws_account_id }}
