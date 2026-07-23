@@ -76,7 +76,7 @@ jobs:
           aws s3 cp deploy-${GITHUB_SHA}.zip s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/
 
       - name: Deploy to Elastic Beanstalk
-        uses: ./.github/actions/elasticbeanstalk-deploy
+        uses: ./.github/elasticbeanstalk-deploy
         with:
           eb_app_name: ${{ secrets.EB_APP_NAME }}
           eb_env_name: ${{ secrets.EB_ENV_NAME }}
