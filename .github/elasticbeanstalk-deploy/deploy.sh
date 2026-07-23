@@ -60,7 +60,7 @@ else
     --option-settings \
       Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
       Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=aws-elasticbeanstalk-ec2-role \
-    --operations-role "arn:aws:iam::460589074682:role/aws-elasticbeanstalk-service-role" \
+    --operations-role "arn:aws:iam::460589074682:role/service-role/aws-elasticbeanstalk-service-role" \
     --version-label "$VERSION" \
     --region "$REGION"
 fi
