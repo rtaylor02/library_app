@@ -10,6 +10,6 @@ services:
     image: 460589074682.dkr.ecr.eu-west-2.amazonaws.com/javarchitect-library-app-frontend:${GITHUB_SHA}
     container_name: frontend
     ports:
-      - "80:80"
+      - "5000:80"
     depends_on:
       - backend
