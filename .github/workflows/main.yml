@@ -57,22 +57,37 @@ jobs:
         run: |
           EB_APP="JavaRchitect-library-app"
           EB_ENV="JavaRchitect-library-env"
-          # Check if the application exists by counting the items in the Applications array
+          VERSION_LABEL="${GITHUB_SHA}"
+
+          # 1. Check if application exists
           APP_COUNT=$(aws elasticbeanstalk describe-applications --application-names "$EB_APP" | jq '.Applications | length')
-          if [ "$APP_COUNT" -gt 0 ]; then
-            echo "Application $EB_APP already exists."
-          else
+          if [ "$APP_COUNT" -eq 0 ]; then
             echo "Application $EB_APP does not exist. Creating it..."
             aws elasticbeanstalk create-application \
               --application-name "$EB_APP" \
               --description "JavaRchitect Library Application deployed via GitHub Actions"
           fi
-          # Now that the application is guaranteed to exist, create the version
-          echo "Creating new application version..."
-          aws elasticbeanstalk create-application-version \
+
+          # 2. Check if this specific version already exists
+          VERSION_COUNT=$(aws elasticbeanstalk describe-application-versions \
             --application-name "$EB_APP" \
-            --version-label "$GITHUB_SHA" \
-            --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="deploy-${GITHUB_SHA}.zip"
+            --version-labels "$VERSION_LABEL" | jq '.ApplicationVersions | length')
+
+          if [ "$VERSION_COUNT" -eq 0 ]; then
+            echo "Version $VERSION_LABEL does not exist. Creating new version..."
+            aws elasticbeanstalk create-application-version \
+              --application-name "$EB_APP" \
+              --version-label "$VERSION_LABEL" \
+              --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="deploy-${GITHUB_SHA}.zip"
+          else
+            echo "Version $VERSION_LABEL already exists. Skipping version creation."
+          fi
+
+          # 3. Proceed to update/deploy the environment using the version
+          echo "Updating environment $EB_ENV to version $VERSION_LABEL..."
+          aws elasticbeanstalk update-environment \
+            --environment-name "$EB_ENV" \
+            --version-label "$VERSION_LABEL"
           
           # Update or create environment
           if aws elasticbeanstalk describe-environments --application-name $EB_APP --environment-names $EB_ENV | grep -q '"Status":'; then
