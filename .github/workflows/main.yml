@@ -107,12 +107,32 @@ jobs:
               --application-name "$EB_APP" \
               --environment-name "$EB_ENV" \
               --solution-stack-name "$SOLUTION_STACK" \
-              --option-settings \
-                  Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
-                  Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=aws-elasticbeanstalk-ec2-role \
-                  Namespace=aws:ec2:vpc,OptionName=VPCId,Value="${{ secrets.VPC_ID }}" \
-                  Namespace=aws:ec2:vpc,OptionName=Subnets,Value="${{ secrets.SUBNET_ID_1 }},${{ secrets.SUBNET_ID_2 }}, ${{ secrets.SUBNET_ID_3 }}" \
-                  Namespace=aws:ec2:vpc,OptionName=ELBSubnets,Value="${{ secrets.SUBNET_ID_1 }},${{ secrets.SUBNET_ID_2 }}, ${{ secrets.SUBNET_ID_3 }}"
-              --version-label "$VERSION_LABEL"
+              --option-settings '[
+                {
+                  "Namespace": "aws:autoscaling:launchconfiguration",
+                  "OptionName": "InstanceType",
+                  "Value": "t3.small"
+                },
+                {
+                  "Namespace": "aws:autoscaling:launchconfiguration",
+                  "OptionName": "IamInstanceProfile",
+                  "Value": "aws-elasticbeanstalk-ec2-role"
+                },
+                {
+                  "Namespace": "aws:ec2:vpc",
+                  "OptionName": "VPCId",
+                  "Value": "${{ secrets.VPC_ID }}"
+                },
+                {
+                  "Namespace": "aws:ec2:vpc",
+                  "OptionName": "Subnets",
+                  "Value": "${{ secrets.SUBNETS }}"
+                },
+                {
+                  "Namespace": "aws:ec2:vpc",
+                  "OptionName": "ELBSubnets",
+                  "Value": "${{ secrets.SUBNETS }}"
+                }
+              ]'
           fi
 
