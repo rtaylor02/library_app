@@ -88,24 +88,28 @@ jobs:
           aws elasticbeanstalk update-environment \
             --environment-name "$EB_ENV" \
             --version-label "$VERSION_LABEL"
-          
-          # Update or create environment
-          if aws elasticbeanstalk describe-environments --application-name $EB_APP --environment-names $EB_ENV | grep -q '"Status":'; then
-            echo "Updating existing environment..."
+
+                
+          # Check if the environment exists
+          ENV_COUNT=$(aws elasticbeanstalk describe-environments \
+            --application-name "$EB_APP" \
+            --environment-names "$EB_ENV" | jq '.Environments | length')
+
+          if [ "$ENV_COUNT" -gt 0 ]; then
+            echo "Environment $EB_ENV already exists. Updating environment..."
             aws elasticbeanstalk update-environment \
-              --application-name $EB_APP \
-              --environment-name $EB_ENV \
-              --version-label $GITHUB_SHA
+              --environment-name "$EB_ENV" \
+              --version-label "$VERSION_LABEL"
           else
             echo "Environment $EB_ENV does not exist. Creating new environment..."
             aws elasticbeanstalk create-environment \
-              --application-name $EB_APP \
-              --environment-name $EB_ENV \
+              --application-name "$EB_APP" \
+              --environment-name "$EB_ENV" \
               --solution-stack-name "64bit Amazon Linux 2023 v4.6.3 running Docker" \
               --option-settings \
                   Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
                   Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=aws-elasticbeanstalk-ec2-role \
               --operations-role "arn:aws:iam::216207491357:role/aws-elasticbeanstalk-service-role" \
-              --version-label $GITHUB_SHA
+              --version-label "$VERSION_LABEL"
           fi
 
