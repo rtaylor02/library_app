@@ -59,20 +59,21 @@ jobs:
           EB_ENV="JavaRchitect-library-env"
           VERSION_LABEL="${GITHUB_SHA}"
 
-          # 1. Check if application exists
+          # 1. Check if the Application exists, create it if not
           APP_COUNT=$(aws elasticbeanstalk describe-applications --application-names "$EB_APP" | jq '.Applications | length')
           if [ "$APP_COUNT" -eq 0 ]; then
             echo "Application $EB_APP does not exist. Creating it..."
             aws elasticbeanstalk create-application \
               --application-name "$EB_APP" \
               --description "JavaRchitect Library Application deployed via GitHub Actions"
+          else
+            echo "Application $EB_APP already exists."
           fi
 
-          # 2. Check if this specific version already exists
+          # 2. Check if the Application Version exists, create it if not
           VERSION_COUNT=$(aws elasticbeanstalk describe-application-versions \
             --application-name "$EB_APP" \
             --version-labels "$VERSION_LABEL" | jq '.ApplicationVersions | length')
-
           if [ "$VERSION_COUNT" -eq 0 ]; then
             echo "Version $VERSION_LABEL does not exist. Creating new version..."
             aws elasticbeanstalk create-application-version \
@@ -83,25 +84,18 @@ jobs:
             echo "Version $VERSION_LABEL already exists. Skipping version creation."
           fi
 
-          # 3. Proceed to update/deploy the environment using the version
-          echo "Updating environment $EB_ENV to version $VERSION_LABEL..."
-          aws elasticbeanstalk update-environment \
-            --environment-name "$EB_ENV" \
-            --version-label "$VERSION_LABEL"
-
-                
-          # Check if the environment exists
+          # 3. Check if the Environment exists, update or create it
           ENV_COUNT=$(aws elasticbeanstalk describe-environments \
             --application-name "$EB_APP" \
             --environment-names "$EB_ENV" | jq '.Environments | length')
 
           if [ "$ENV_COUNT" -gt 0 ]; then
-            echo "Environment $EB_ENV already exists. Updating environment..."
+            echo "Environment $EB_ENV already exists. Updating environment to version $VERSION_LABEL..."
             aws elasticbeanstalk update-environment \
               --environment-name "$EB_ENV" \
               --version-label "$VERSION_LABEL"
           else
-            echo "Environment $EB_ENV does not exist. Creating new environment..."
+            echo "Environment $EB_ENV does not exist. Creating new environment with version $VERSION_LABEL..."
             aws elasticbeanstalk create-environment \
               --application-name "$EB_APP" \
               --environment-name "$EB_ENV" \
@@ -109,7 +103,7 @@ jobs:
               --option-settings \
                   Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
                   Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value=aws-elasticbeanstalk-ec2-role \
-              --operations-role "arn:aws:iam::216207491357:role/aws-elasticbeanstalk-service-role" \
+              --operations-role "arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/aws-elasticbeanstalk-service-role" \
               --version-label "$VERSION_LABEL"
           fi
-
+          
