@@ -1,13 +1,13 @@
-version: '3'
+# version: '3'
 services:
   backend:
-    image: 216207491357.dkr.ecr.eu-west-2.amazonaws.com/javarchitect-library-app-backend:latest
+    image: 460589074682.dkr.ecr.eu-west-2.amazonaws.com/javarchitect-library-app-backend:${GITHUB_SHA}
     container_name: backend
     ports:
       - "8080:8080"
 
   frontend:
-    image: 216207491357.dkr.ecr.eu-west-2.amazonaws.com/javarchitect-library-app-frontend:latest
+    image: 460589074682.dkr.ecr.eu-west-2.amazonaws.com/javarchitect-library-app-frontend:${GITHUB_SHA}
     container_name: frontend
     ports:
       - "80:80"

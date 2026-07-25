@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="39fe8b90-d9d3-4eaf-9efa-498b35996387" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;rtaylor02&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/rtaylor02/library_app.git&quot;,
+    &quot;accountId&quot;: &quot;819c66ed-5c64-4fd9-b124-aa8fea048554&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.323088207659373" />
+      <entry key="MS500" value="1.797745239809033" />
+      <entry key="S2" value="1.9450745221159864" />
+      <entry key="S5" value="1.9776567928566353" />
+      <entry key="S10" value="1.9887652870406785" />
+      <entry key="S30" value="1.9962409831779873" />
+      <entry key="S60" value="1.9981187219855097" />
+      <entry key="M2" value="1.9990589181752552" />
+      <entry key="M5" value="1.9996300427164875" />
+      <entry key="M10" value="2.016694852613841" />
+      <entry key="M15" value="2.2452719968770136" />
+      <entry key="M30" value="5.729113959199017" />
+      <entry key="H1" value="16.880149614656673" />
+      <entry key="H2" value="31.993430094451522" />
+      <entry key="H4" value="44.717274770100765" />
+      <entry key="D1" value="59.471545078479934" />
+      <entry key="W1" value="62.482648695730454" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.5801166643233896" />
+      <entry key="MS500" value="1.5598176549789176" />
+      <entry key="S2" value="1.879401868999167" />
+      <entry key="S5" value="1.9508512442649313" />
+      <entry key="S10" value="1.9752714712120174" />
+      <entry key="S30" value="1.991722660072302" />
+      <entry key="S60" value="1.9958570027457072" />
+      <entry key="M2" value="1.9979274184094937" />
+      <entry key="M5" value="1.9991772885774415" />
+      <entry key="M10" value="2.016467598014951" />
+      <entry key="M15" value="2.2451120264949616" />
+      <entry key="M30" value="5.7289637918906" />
+      <entry key="H1" value="16.879955359756757" />
+      <entry key="H2" value="31.993248430838506" />
+      <entry key="H4" value="44.71714719402501" />
+      <entry key="D1" value="59.47151653579219" />
+      <entry key="W1" value="62.48264440293628" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="34bZeyRRnKTCwUShbQaFIYtdGwD" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.LibraryappApplication.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.javarchitect.libraryapp.dao" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="LibraryappApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.javarchitect.libraryapp.LibraryappApplication.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.javarchitect.libraryapp.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.LibraryappApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.25134.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.25134.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="39fe8b90-d9d3-4eaf-9efa-498b35996387" name="Changes" comment="" />
+      <created>1761484333208</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1761484333208</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
