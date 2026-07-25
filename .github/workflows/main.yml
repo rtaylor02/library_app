@@ -87,7 +87,7 @@ jobs:
           # 3. Check if the Environment exists, update or create it
           ENV_COUNT=$(aws elasticbeanstalk describe-environments \
             --application-name "$EB_APP" \
-            --environment-names "$EB_ENV" | jq '.Environments | length')
+            --environment-names "$EB_ENV" | jq '[.Environments[] | select(.Status != "Terminated")]  | length')
 
           if [ "$ENV_COUNT" -gt 0 ]; then
             echo "Environment $EB_ENV already exists. Updating environment to version $VERSION_LABEL..."
