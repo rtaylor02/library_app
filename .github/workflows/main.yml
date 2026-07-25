@@ -132,6 +132,11 @@ jobs:
                   "Namespace": "aws:ec2:vpc",
                   "OptionName": "ELBSubnets",
                   "Value": "${{ secrets.SUBNETS }}"
+                },
+                {
+                  "Namespace": "aws:ec2:vpc",
+                  "OptionName": "AssociatePublicIpAddress",
+                  "Value": "true"
                 }
               ]'
           fi
